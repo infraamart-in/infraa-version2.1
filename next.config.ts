@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  basePath: '/infraa-version2.o',
 };
 
 export default nextConfig;
