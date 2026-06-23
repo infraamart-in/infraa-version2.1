@@ -196,9 +196,20 @@ body {
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .section-padding {
     padding: 5rem 0;
+  }
+
+  .container-wide,
+  .container-narrow {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .section-padding {
+    padding: 4rem 0;
   }
 
   .container-wide,
@@ -207,8 +218,19 @@ body {
   }
 }
 
-@media (max-width: 480px) {
-  .section-padding {
-    padding: 4rem 0;
+/* Visibility helpers */
+.show-mobile {
+  display: none !important;
+}
+.hidden-mobile {
+  display: flex !important;
+}
+
+@media (max-width: 1023px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+  .show-mobile {
+    display: flex !important;
   }
 }

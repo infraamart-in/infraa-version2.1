@@ -56,7 +56,7 @@ export default function HeroSection() {
               transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
               className="font-display"
               style={{
-                fontSize: 'clamp(2.8rem, 5vw, 4.5rem)',
+                fontSize: 'clamp(2.2rem, 5vw, 4.5rem)',
                 fontWeight: 600,
                 lineHeight: 1.06,
                 letterSpacing: '-0.02em',
@@ -92,6 +92,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 16 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="hero-ctas"
               style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}
             >
               <Link
@@ -250,10 +251,40 @@ export default function HeroSection() {
       </motion.div>
 
       <style jsx>{`
-        @media (max-width: 960px) {
+        .hero-animation {
+          width: 100%;
+          max-width: 550px;
+          margin: 0 auto;
+        }
+        @media (max-width: 1023px) {
           .hero-grid {
             grid-template-columns: 1fr !important;
             gap: 3rem !important;
+            text-align: center !important;
+          }
+          .hero-grid > div:first-child {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .hero-grid p {
+            margin-left: auto;
+            margin-right: auto;
+          }
+          .hero-ctas {
+            justify-content: center;
+          }
+        }
+        @media (max-width: 480px) {
+          .hero-ctas {
+            flex-direction: column !important;
+            width: 100% !important;
+            gap: 0.75rem !important;
+          }
+          .hero-ctas > :global(a) {
+            width: 100% !important;
+            justify-content: center !important;
+            text-align: center !important;
           }
         }
       `}</style>

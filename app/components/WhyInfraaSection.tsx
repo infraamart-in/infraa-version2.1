@@ -101,13 +101,13 @@ const getScatteredCoords = (id: number, type: 'left' | 'top' | 'rotate', isMobil
   if (isMobile) {
     const mobileCoords: any = {
       1: { top: 22, left: 6, rotate: -3 },
-      2: { top: 31, left: 10, rotate: 2 },
-      3: { top: 40, left: 4, rotate: -2 },
-      4: { top: 49, left: 8, rotate: 3 },
-      5: { top: 58, left: 5, rotate: -2 },
-      6: { top: 27, left: 48, rotate: 3 },
-      7: { top: 36, left: 50, rotate: -3 },
-      8: { top: 45, left: 46, rotate: 2 }
+      2: { top: 30, left: 8, rotate: 2 },
+      3: { top: 38, left: 5, rotate: -2 },
+      4: { top: 46, left: 7, rotate: 3 },
+      5: { top: 54, left: 6, rotate: -2 },
+      6: { top: 62, left: 8, rotate: 2 },
+      7: { top: 70, left: 5, rotate: -3 },
+      8: { top: 78, left: 7, rotate: 2 }
     };
     return mobileCoords[id]?.[type] ?? 0;
   } else {
@@ -895,7 +895,7 @@ export default function WhyInfraaSection() {
   // Track scroll position to update activeStep for DOM cleanups
   useEffect(() => {
     const unsubscribe = scrollYProgress.on("change", (latest) => {
-      const step = Math.min(Math.max(Math.round(latest * (380 / 60)), 0), 7);
+      const step = Math.min(Math.max(Math.round(latest * 7), 0), 7);
       setActiveStep(step);
 
       // Disable scroll snapping once we scroll past the end of WhyInfraaSection (progress >= 0.98)
@@ -921,7 +921,7 @@ export default function WhyInfraaSection() {
       ref={containerRef}
       id="why-infraa-container"
       style={{
-        height: '480vh',
+        height: isMobile ? '280vh' : '480vh',
         position: 'relative',
         backgroundColor: 'var(--bg-page)',
       }}
@@ -1000,7 +1000,7 @@ export default function WhyInfraaSection() {
                 <h2
                   className="font-display"
                   style={{
-                    fontSize: 'clamp(2.4rem, 4.8vw, 4.2rem)',
+                    fontSize: 'clamp(1.75rem, 4.5vw, 4.2rem)',
                     fontWeight: 600,
                     color: 'var(--text-primary)',
                     lineHeight: 1.1,
@@ -1041,16 +1041,11 @@ export default function WhyInfraaSection() {
         </div>
       </div>
 
-      {/* Snap targets absolute positioned relative to the 500vh container */}
+      {/* Snap targets absolute positioned relative to the container */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1 }}>
-        <div style={{ height: '60vh', scrollSnapAlign: 'start' }} />
-        <div style={{ height: '60vh', scrollSnapAlign: 'start' }} />
-        <div style={{ height: '60vh', scrollSnapAlign: 'start' }} />
-        <div style={{ height: '60vh', scrollSnapAlign: 'start' }} />
-        <div style={{ height: '60vh', scrollSnapAlign: 'start' }} />
-        <div style={{ height: '60vh', scrollSnapAlign: 'start' }} />
-        <div style={{ height: '60vh', scrollSnapAlign: 'start' }} />
-        <div style={{ height: '60vh', scrollSnapAlign: 'start' }} />
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} style={{ height: isMobile ? '35vh' : '60vh', scrollSnapAlign: 'start' }} />
+        ))}
       </div>
     </div>
   );

@@ -97,6 +97,7 @@ export default function MarketplaceLayout() {
   const [searchQuery, setSearchQuery] = useState('');
   
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   
   // Accordion Expand/Collapse States
   const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(true);
@@ -344,6 +345,166 @@ export default function MarketplaceLayout() {
     );
   };
 
+  const renderFilterContent = () => {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+        {/* Accordion 1: Material Categories */}
+        <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem' }}>
+          <div 
+            onClick={() => setIsCategoriesExpanded(!isCategoriesExpanded)}
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
+          >
+            <h4 style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Categories
+            </h4>
+            {isCategoriesExpanded ? <ChevronUp size={14} style={{ color: 'var(--text-secondary)' }} /> : <ChevronDown size={14} style={{ color: 'var(--text-secondary)' }} />}
+          </div>
+          <motion.div
+            initial={false}
+            animate={{ height: isCategoriesExpanded ? 'auto' : 0, opacity: isCategoriesExpanded ? 1 : 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{ paddingTop: '0.75rem' }}>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                <li>
+                  <button
+                    onClick={() => { handleCategoryClick(null); setShowMobileFilters(false); }}
+                    style={{
+                      display: 'flex',
+                      width: '100%',
+                      textAlign: 'left',
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '0.8rem',
+                      color: selectedCategory === null ? 'var(--accent)' : 'var(--text-secondary)',
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontWeight: selectedCategory === null ? 600 : 400,
+                      padding: '4px 0',
+                      transition: 'color 0.2s ease'
+                    }}
+                  >
+                    All Categories
+                  </button>
+                </li>
+                {sections.map(sec => (
+                  <div key={sec.id} style={{ margin: '0.25rem 0' }}>
+                    <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: 'rgba(17,17,17,0.4)', textTransform: 'uppercase', padding: '4px 0' }}>
+                      {sec.title}
+                    </div>
+                    {sec.categories.map(cat => (
+                      <li key={cat.slug}>
+                        <button
+                          onClick={() => { handleCategoryClick(cat.slug); setShowMobileFilters(false); }}
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            width: '100%',
+                            textAlign: 'left',
+                            fontFamily: 'Inter, sans-serif',
+                            fontSize: '0.775rem',
+                            color: selectedCategory === cat.slug ? 'var(--accent)' : 'var(--text-secondary)',
+                            backgroundColor: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontWeight: selectedCategory === cat.slug ? 600 : 400,
+                            padding: '3px 0 3px 8px',
+                            borderLeft: selectedCategory === cat.slug ? '1.5px solid var(--accent)' : '1.5px solid transparent',
+                            transition: 'color 0.15s ease'
+                          }}
+                        >
+                          {cat.label}
+                        </button>
+                      </li>
+                    ))}
+                  </div>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Accordion 2: Locations */}
+        <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem' }}>
+          <div 
+            onClick={() => setIsLocationsExpanded(!isLocationsExpanded)}
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
+          >
+            <h4 style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Locations
+            </h4>
+            {isLocationsExpanded ? <ChevronUp size={14} style={{ color: 'var(--text-secondary)' }} /> : <ChevronDown size={14} style={{ color: 'var(--text-secondary)' }} />}
+          </div>
+          <motion.div
+            initial={false}
+            animate={{ height: isLocationsExpanded ? 'auto' : 0, opacity: isLocationsExpanded ? 1 : 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{ paddingTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+              {locationsList.map(loc => {
+                const checked = selectedLocations.includes(loc);
+                return (
+                  <div 
+                    key={loc} 
+                    onClick={() => toggleLocation(loc)}
+                    style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.75rem', color: 'var(--text-secondary)' }}
+                  >
+                    {checked ? <CheckSquare size={14} style={{ color: 'var(--accent)' }} /> : <Square size={14} style={{ opacity: 0.5 }} />}
+                    <span style={{ color: checked ? 'var(--text-primary)' : 'inherit', fontWeight: checked ? 500 : 400 }}>{loc}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Accordion 3: Technical Ratings */}
+        <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
+          <div 
+            onClick={() => setIsRatingsExpanded(!isRatingsExpanded)}
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
+          >
+            <h4 style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Technical Ratings
+            </h4>
+            {isRatingsExpanded ? <ChevronUp size={14} style={{ color: 'var(--text-secondary)' }} /> : <ChevronDown size={14} style={{ color: 'var(--text-secondary)' }} />}
+          </div>
+          <motion.div
+            initial={false}
+            animate={{ height: isRatingsExpanded ? 'auto' : 0, opacity: isRatingsExpanded ? 1 : 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{ paddingTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+              {[
+                { label: 'Premium Grade', checked: filterPremium, setter: setFilterPremium },
+                { label: 'Standard Grade', checked: filterStandard, setter: setFilterStandard },
+                { label: 'Green Certified', checked: filterGreen, setter: setFilterGreen },
+                { label: 'Fire Rated', checked: filterFire, setter: setFilterFire },
+                { label: 'Acoustic Rated', checked: filterAcoustic, setter: setFilterAcoustic },
+                { label: 'High Strength', checked: filterHighStrength, setter: setFilterHighStrength },
+                { label: 'Low Carbon', checked: filterLowCarbon, setter: setFilterLowCarbon },
+                { label: 'Recycled Content', checked: filterRecycled, setter: setFilterRecycled },
+                { label: 'IS/BIS Compliant', checked: filterISCompliant, setter: setFilterISCompliant }
+              ].map(item => (
+                <div 
+                  key={item.label}
+                  onClick={() => item.setter(!item.checked)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.75rem', color: 'var(--text-secondary)', padding: '2px 0' }}
+                >
+                  {item.checked ? <CheckSquare size={14} style={{ color: 'var(--accent)' }} /> : <Square size={14} style={{ opacity: 0.5 }} />}
+                  <span style={{ color: item.checked ? 'var(--text-primary)' : 'inherit', fontWeight: item.checked ? 500 : 400 }}>{item.label}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div style={{ position: 'relative', minHeight: '100vh', paddingBottom: '5rem' }}>
       {/* Grid Pattern overlay */}
@@ -391,63 +552,110 @@ export default function MarketplaceLayout() {
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '1.5rem'
-        }}>
-          {/* Main search bar on the left */}
+        }}
+        className="marketplace-controls-row">
+          {/* Main search bar + filters button on mobile */}
           <div style={{
-            position: 'relative',
+            display: 'flex',
+            gap: '0.75rem',
             flex: '1',
-            maxWidth: '500px',
-            minWidth: '280px'
-          }}>
-            <Search size={16} style={{
-              position: 'absolute',
-              left: '14px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: 'var(--text-secondary)',
-              opacity: 0.6
-            }} />
-            <input 
-              type="text"
-              placeholder="Search specifications, manufacturer or standard..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+            maxWidth: '620px',
+            minWidth: '280px',
+            alignItems: 'center'
+          }}
+          className="search-container-wrapper">
+            <div style={{
+              position: 'relative',
+              flex: '1',
+            }}>
+              <Search size={16} style={{
+                position: 'absolute',
+                left: '14px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: 'var(--text-secondary)',
+                opacity: 0.6
+              }} />
+              <input 
+                type="text"
+                placeholder="Search specifications, manufacturer or standard..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 1rem 0.75rem 2.5rem',
+                  backgroundColor: 'var(--card-bg)',
+                  border: '1.5px solid var(--border-color)',
+                  borderRadius: '8px',
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '0.85rem',
+                  color: 'var(--text-primary)',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease'
+                }}
+                onFocus={(e) => { e.target.style.borderColor = 'var(--accent)'; }}
+                onBlur={(e) => { e.target.style.borderColor = 'var(--border-color)'; }}
+              />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: 'var(--text-secondary)'
+                  }}
+                >
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+
+            {/* Mobile Filters Trigger Button */}
+            <button
+              className="show-mobile"
+              onClick={() => setShowMobileFilters(true)}
               style={{
-                width: '100%',
-                padding: '0.75rem 1rem 0.75rem 2.5rem',
+                display: 'none',
+                alignItems: 'center',
+                gap: '8px',
+                fontFamily: 'Inter, sans-serif',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                padding: '0.75rem 1.25rem',
                 backgroundColor: 'var(--card-bg)',
                 border: '1.5px solid var(--border-color)',
                 borderRadius: '8px',
-                fontFamily: 'Inter, sans-serif',
-                fontSize: '0.85rem',
+                cursor: 'pointer',
                 color: 'var(--text-primary)',
-                outline: 'none',
-                transition: 'border-color 0.2s ease'
+                boxShadow: '0 2px 8px rgba(17,17,17,0.03)',
+                height: '42px',
+                flexShrink: 0
               }}
-              onFocus={(e) => { e.target.style.borderColor = 'var(--accent)'; }}
-              onBlur={(e) => { e.target.style.borderColor = 'var(--border-color)'; }}
-            />
-            {searchQuery && (
-              <button 
-                onClick={() => setSearchQuery('')}
-                style={{
-                  position: 'absolute',
-                  right: '12px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: 'var(--text-secondary)'
-                }}
-              >
-                <X size={14} />
-              </button>
-            )}
+            >
+              <SlidersHorizontal size={14} style={{ color: 'var(--accent)' }} />
+              Filters
+              {(selectedLocations.length > 0 || filterPremium || filterStandard || filterGreen || filterFire || filterAcoustic || filterHighStrength || filterLowCarbon || filterRecycled || filterISCompliant) && (
+                <span style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  backgroundColor: 'var(--accent)',
+                  display: 'inline-block'
+                }} />
+              )}
+            </button>
           </div>
 
           {/* Section Selector Tab Pill-Grid on the right */}
-          <div style={{ display: 'flex', gap: '0.5rem', backgroundColor: 'rgba(17, 17, 17, 0.03)', padding: '4px', borderRadius: '8px' }}>
+          <div 
+            style={{ display: 'flex', gap: '0.5rem', backgroundColor: 'rgba(17, 17, 17, 0.03)', padding: '4px', borderRadius: '8px' }}
+            className="section-tabs-wrapper"
+          >
             <button 
               onClick={() => handleSectionClick(null)}
               style={{
@@ -495,6 +703,7 @@ export default function MarketplaceLayout() {
           <motion.div 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
+            className="category-banner-container"
             style={{
               padding: '2.5rem',
               backgroundColor: '#FFFFFF',
@@ -505,9 +714,9 @@ export default function MarketplaceLayout() {
               position: 'relative'
             }}
           >
-            <div style={{ display: 'flex', gap: '2.5rem', flexDirection: 'row', alignItems: 'stretch', flexWrap: 'wrap' }}>
+            <div className="category-banner-flex" style={{ display: 'flex', gap: '2.5rem', flexDirection: 'row', alignItems: 'stretch', flexWrap: 'wrap' }}>
               {/* Left Column: Placeholder (30%) */}
-              <div style={{
+              <div className="category-banner-placeholder-wrapper" style={{
                 flex: '0 0 30%',
                 minWidth: '240px',
                 borderRadius: '8px',
@@ -520,7 +729,7 @@ export default function MarketplaceLayout() {
               </div>
 
               {/* Right Column: Content (70%) */}
-              <div style={{
+              <div className="category-banner-content-wrapper" style={{
                 flex: '1',
                 minWidth: '300px',
                 display: 'flex',
@@ -545,7 +754,7 @@ export default function MarketplaceLayout() {
                 </div>
 
                 {/* Sourcing Intelligence guide */}
-                <div style={{ 
+                <div className="category-banner-technical-guide" style={{ 
                   flex: '1', 
                   minWidth: '260px', 
                   borderLeft: '2px solid var(--accent)', 
@@ -623,161 +832,7 @@ export default function MarketplaceLayout() {
                 RESET_ALL
               </button>
             </div>
-
-            {/* Accordion 1: Material Categories */}
-            <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem' }}>
-              <div 
-                onClick={() => setIsCategoriesExpanded(!isCategoriesExpanded)}
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
-              >
-                <h4 style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Categories
-                </h4>
-                {isCategoriesExpanded ? <ChevronUp size={14} style={{ color: 'var(--text-secondary)' }} /> : <ChevronDown size={14} style={{ color: 'var(--text-secondary)' }} />}
-              </div>
-              <motion.div
-                initial={false}
-                animate={{ height: isCategoriesExpanded ? 'auto' : 0, opacity: isCategoriesExpanded ? 1 : 0 }}
-                transition={{ duration: 0.2, ease: 'easeInOut' }}
-                style={{ overflow: 'hidden' }}
-              >
-                <div style={{ paddingTop: '0.75rem' }}>
-                  <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                    <li>
-                      <button
-                        onClick={() => handleCategoryClick(null)}
-                        style={{
-                          display: 'flex',
-                          width: '100%',
-                          textAlign: 'left',
-                          fontFamily: 'Inter, sans-serif',
-                          fontSize: '0.8rem',
-                          color: selectedCategory === null ? 'var(--accent)' : 'var(--text-secondary)',
-                          backgroundColor: 'transparent',
-                          border: 'none',
-                          cursor: 'pointer',
-                          fontWeight: selectedCategory === null ? 600 : 400,
-                          padding: '4px 0',
-                          transition: 'color 0.2s ease'
-                        }}
-                      >
-                        All Categories
-                      </button>
-                    </li>
-                    {sections.map(sec => (
-                      <div key={sec.id} style={{ margin: '0.25rem 0' }}>
-                        <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.7rem', fontWeight: 600, color: 'rgba(17,17,17,0.4)', textTransform: 'uppercase', padding: '4px 0' }}>
-                          {sec.title}
-                        </div>
-                        {sec.categories.map(cat => (
-                          <li key={cat.slug}>
-                            <button
-                              onClick={() => handleCategoryClick(cat.slug)}
-                              style={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                width: '100%',
-                                textAlign: 'left',
-                                fontFamily: 'Inter, sans-serif',
-                                fontSize: '0.775rem',
-                                color: selectedCategory === cat.slug ? 'var(--accent)' : 'var(--text-secondary)',
-                                backgroundColor: 'transparent',
-                                border: 'none',
-                                cursor: 'pointer',
-                                fontWeight: selectedCategory === cat.slug ? 600 : 400,
-                                padding: '3px 0 3px 8px',
-                                borderLeft: selectedCategory === cat.slug ? '1.5px solid var(--accent)' : '1.5px solid transparent',
-                                transition: 'color 0.15s ease'
-                              }}
-                            >
-                              {cat.label}
-                            </button>
-                          </li>
-                        ))}
-                      </div>
-                    ))}
-                  </ul>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Accordion 2: Locations */}
-            <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem' }}>
-              <div 
-                onClick={() => setIsLocationsExpanded(!isLocationsExpanded)}
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
-              >
-                <h4 style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Locations
-                </h4>
-                {isLocationsExpanded ? <ChevronUp size={14} style={{ color: 'var(--text-secondary)' }} /> : <ChevronDown size={14} style={{ color: 'var(--text-secondary)' }} />}
-              </div>
-              <motion.div
-                initial={false}
-                animate={{ height: isLocationsExpanded ? 'auto' : 0, opacity: isLocationsExpanded ? 1 : 0 }}
-                transition={{ duration: 0.2, ease: 'easeInOut' }}
-                style={{ overflow: 'hidden' }}
-              >
-                <div style={{ paddingTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
-                  {locationsList.map(loc => {
-                    const checked = selectedLocations.includes(loc);
-                    return (
-                      <div 
-                        key={loc} 
-                        onClick={() => toggleLocation(loc)}
-                        style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.75rem', color: 'var(--text-secondary)' }}
-                      >
-                        {checked ? <CheckSquare size={14} style={{ color: 'var(--accent)' }} /> : <Square size={14} style={{ opacity: 0.5 }} />}
-                        <span style={{ color: checked ? 'var(--text-primary)' : 'inherit', fontWeight: checked ? 500 : 400 }}>{loc}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Accordion 3: Technical Ratings */}
-            <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
-              <div 
-                onClick={() => setIsRatingsExpanded(!isRatingsExpanded)}
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
-              >
-                <h4 style={{ fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  Technical Ratings
-                </h4>
-                {isRatingsExpanded ? <ChevronUp size={14} style={{ color: 'var(--text-secondary)' }} /> : <ChevronDown size={14} style={{ color: 'var(--text-secondary)' }} />}
-              </div>
-              <motion.div
-                initial={false}
-                animate={{ height: isRatingsExpanded ? 'auto' : 0, opacity: isRatingsExpanded ? 1 : 0 }}
-                transition={{ duration: 0.2, ease: 'easeInOut' }}
-                style={{ overflow: 'hidden' }}
-              >
-                <div style={{ paddingTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
-                  {[
-                    { label: 'Premium Grade', checked: filterPremium, setter: setFilterPremium },
-                    { label: 'Standard Grade', checked: filterStandard, setter: setFilterStandard },
-                    { label: 'Green Certified', checked: filterGreen, setter: setFilterGreen },
-                    { label: 'Fire Rated', checked: filterFire, setter: setFilterFire },
-                    { label: 'Acoustic Rated', checked: filterAcoustic, setter: setFilterAcoustic },
-                    { label: 'High Strength', checked: filterHighStrength, setter: setFilterHighStrength },
-                    { label: 'Low Carbon', checked: filterLowCarbon, setter: setFilterLowCarbon },
-                    { label: 'Recycled Content', checked: filterRecycled, setter: setFilterRecycled },
-                    { label: 'IS/BIS Compliant', checked: filterISCompliant, setter: setFilterISCompliant }
-                  ].map(item => (
-                    <div 
-                      key={item.label}
-                      onClick={() => item.setter(!item.checked)}
-                      style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.75rem', color: 'var(--text-secondary)', padding: '2px 0' }}
-                    >
-                      {item.checked ? <CheckSquare size={14} style={{ color: 'var(--accent)' }} /> : <Square size={14} style={{ opacity: 0.5 }} />}
-                      <span style={{ color: item.checked ? 'var(--text-primary)' : 'inherit', fontWeight: item.checked ? 500 : 400 }}>{item.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
-
+            {renderFilterContent()}
           </aside>
 
           {/* Central Column: Product Grid */}
@@ -1080,6 +1135,189 @@ export default function MarketplaceLayout() {
 
       </div>
 
+      {/* Mobile Filters Drawer */}
+      <AnimatePresence>
+        {showMobileFilters && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowMobileFilters(false)}
+              style={{
+                position: 'fixed',
+                inset: 0,
+                backgroundColor: 'rgba(17, 17, 17, 0.4)',
+                zIndex: 100,
+                backdropFilter: 'blur(2px)'
+              }}
+            />
+            {/* Drawer Panel */}
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                width: '85vw',
+                maxWidth: '320px',
+                backgroundColor: 'var(--bg-nav)',
+                zIndex: 101,
+                boxShadow: '20px 0 60px rgba(17, 17, 17, 0.15)',
+                borderRight: '1px solid var(--border-color)',
+                display: 'flex',
+                flexDirection: 'column',
+                padding: '1.5rem'
+              }}
+            >
+              {/* Header */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: 'Inter, sans-serif', fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
+                  <SlidersHorizontal size={14} style={{ color: 'var(--accent)' }} />
+                  Filter Parameters
+                </div>
+                <button
+                  onClick={() => setShowMobileFilters(false)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-primary)' }}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Scrollable Filters list */}
+              <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <button 
+                    onClick={() => { handleResetFilters(); setShowMobileFilters(false); }}
+                    style={{
+                      fontFamily: 'JetBrains Mono, monospace',
+                      fontSize: '0.65rem',
+                      color: 'var(--accent)',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      opacity: 0.8,
+                      textDecoration: 'underline'
+                    }}
+                  >
+                    RESET_ALL_FILTERS
+                  </button>
+                </div>
+                {renderFilterContent()}
+              </div>
+
+              {/* Footer action */}
+              <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem', marginTop: '1rem' }}>
+                <button
+                  onClick={() => setShowMobileFilters(false)}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    backgroundColor: 'var(--text-primary)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontFamily: 'Inter, sans-serif',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Apply Filters
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      <style jsx>{`
+        .marketplace-portal-layout {
+          display: grid;
+          grid-template-columns: 260px 1fr 280px;
+          gap: 2.5rem;
+          align-items: flex-start;
+          width: 100%;
+        }
+        @media (max-width: 1200px) {
+          .marketplace-portal-layout {
+            grid-template-columns: 240px 1fr !important;
+            gap: 1.75rem !important;
+          }
+          .suppliers-aside {
+            display: none !important;
+          }
+        }
+        @media (max-width: 1023px) {
+          .marketplace-portal-layout {
+            grid-template-columns: 1fr !important;
+            gap: 1.5rem !important;
+          }
+          .filters-sidebar {
+            display: none !important;
+          }
+          .suppliers-aside {
+            display: block !important;
+            position: static !important;
+            margin-top: 2rem !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .marketplace-controls-row {
+            flex-direction: column !important;
+            align-items: stretch !important;
+          }
+          .search-container-wrapper {
+            max-width: 100% !important;
+            width: 100% !important;
+          }
+          .section-tabs-wrapper {
+            width: 100% !important;
+            overflow-x: auto !important;
+            justify-content: flex-start !important;
+            flex-wrap: nowrap !important;
+            padding: 6px !important;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+          }
+          .section-tabs-wrapper::-webkit-scrollbar {
+            display: none;
+          }
+          .section-tabs-wrapper :global(button) {
+            flex-shrink: 0 !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .category-banner-container {
+            padding: 1.5rem !important;
+          }
+          .category-banner-flex {
+            flex-direction: column !important;
+            gap: 1.5rem !important;
+          }
+          .category-banner-placeholder-wrapper {
+            flex: 0 0 100% !important;
+            width: 100% !important;
+            height: 180px !important;
+          }
+          .category-banner-content-wrapper {
+            flex-direction: column !important;
+            gap: 1.5rem !important;
+          }
+          .category-banner-technical-guide {
+            border-left: none !important;
+            border-top: 2px solid var(--accent) !important;
+            padding-left: 0 !important;
+            padding-top: 1.25rem !important;
+            border-radius: 0 0 8px 8px !important;
+          }
+        }
+      `}</style>
 
     </div>
   );

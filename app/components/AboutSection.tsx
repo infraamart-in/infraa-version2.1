@@ -51,7 +51,7 @@ export default function AboutSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
-          style={{ marginBottom: '8rem' }}
+          className="about-section-block"
         >
           <span className="eyebrow" style={{ display: 'block', marginBottom: '1.5rem' }}>
             ABOUT INFRAA
@@ -60,7 +60,7 @@ export default function AboutSection() {
             id="about-heading"
             className="font-display"
             style={{
-              fontSize: 'clamp(2.8rem, 5.2vw, 4.8rem)',
+              fontSize: 'clamp(2.0rem, 5vw, 4.8rem)',
               fontWeight: 600,
               color: 'white',
               lineHeight: 1.08,
@@ -81,7 +81,8 @@ export default function AboutSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
-          style={{ marginBottom: '8rem', maxWidth: '780px' }}
+          className="about-section-block"
+          style={{ maxWidth: '780px' }}
         >
           <h3 style={{
             fontFamily: 'JetBrains Mono, monospace',
@@ -144,7 +145,7 @@ export default function AboutSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
-          style={{ marginBottom: '9rem' }}
+          className="about-section-block-large"
         >
           <h3 style={{
             fontFamily: 'JetBrains Mono, monospace',
@@ -387,6 +388,12 @@ export default function AboutSection() {
       </div>
 
       <style jsx>{`
+        .about-section-block {
+          margin-bottom: 8rem;
+        }
+        .about-section-block-large {
+          margin-bottom: 9rem;
+        }
         @media (max-width: 900px) {
           .founders-grid {
             grid-template-columns: 1fr !important;
@@ -395,6 +402,14 @@ export default function AboutSection() {
           .contact-grid {
             grid-template-columns: 1fr !important;
             gap: 2.5rem !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .about-section-block {
+            margin-bottom: 4.5rem !important;
+          }
+          .about-section-block-large {
+            margin-bottom: 5rem !important;
           }
         }
       `}</style>

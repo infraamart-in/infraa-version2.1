@@ -691,16 +691,6 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      <style jsx>{`
-        @media (min-width: 769px) {
-          .hidden-mobile { display: flex !important; }
-          .show-mobile { display: none !important; }
-        }
-        @media (max-width: 768px) {
-          .hidden-mobile { display: none !important; }
-          .show-mobile { display: flex !important; }
-        }
-      `}</style>
     </>
   );
 }
